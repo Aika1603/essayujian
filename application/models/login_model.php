@@ -6,19 +6,16 @@ class Login_model extends CI_model {
 	{
 		$pwd = md5($p);
 		//cek admin
-		$this->db->where('nama',$u);
-		$this->db->where('password',$pwd);
+		$this->db->where(array('nama'=>$u, 'password' => $pwd));
 		$query = $this->db->get('admin');	
 		//cek siswa
-		$this->db->where('nis',$u);
-		$this->db->where('password',$pwd);
+		$this->db->where(array('nis'=>$u, 'password' => $pwd));
 		$query2 = $this->db->get('siswa');	
-
 		if($query->num_rows()>0)
 		{   
 			
-			foreach ($query->result() as $row) 
-			{
+				//mengambil data admin
+				$row = $query->row();
 				$sess  = array( 
 							   'id_admin' 		=> $row->id_admin,
 							   'username' 		=> $row->nama,
@@ -27,13 +24,13 @@ class Login_model extends CI_model {
 				$this->session->set_userdata($sess);
 
 				redirect('home/log_admin');
-			}
+			
 			
 			
 		}else if ($query2->num_rows()>0) {
 			
-			foreach ($query2->result() as $row) 
-			{
+				//mengambil data siswa
+				$row = $query->row();
 				$sess  = array( 
 							   'id_siswa' 		=> $row->id_siswa,
 							   'nis' 		=> $row->nis,
@@ -42,7 +39,7 @@ class Login_model extends CI_model {
 							   'foto'			=> $row->foto);
 				$this->session->set_userdata($sess);
 				redirect('home/log_siswa');
-			}
+			
 		}
 		else
 		{
